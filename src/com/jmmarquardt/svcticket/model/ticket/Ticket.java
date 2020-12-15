@@ -66,7 +66,7 @@ public class Ticket {
 	/**
 	 * IllegalArgumentException error message for the constructor, and its setters.
 	 */
-	private static final String ERROR = "Ticket cannot be created.";
+	private static final String NULL_ERROR = "Parameter cannot be null.";
 	/** UnsupportedOperationException error message for the update() method. */
 	private static final String UOE_ERROR = "Invalid command.";
 
@@ -147,14 +147,11 @@ public class Ticket {
 	/**
 	 * Ticket(TicketType, String, String, Category, Priority, String)
 	 * <p>
-	 * Constructs a Ticket from the provided parameters. If any of the given
-	 * parameters are null or an empty string (if a String type), then an
-	 * IllegalArgumentException is thrown. The ticketId is set to the value stored
-	 * in {@code counter}. The counter is then incremented using
-	 * {@code Ticket.incrementCounter()}. The rest of the fields are initialized to
-	 * the parameter values, null, false or an empty object type as appropriate. The
-	 * {@code owner} field should be initialized to an empty String. A new Ticket
-	 * begins in the "New" state.
+	 * Constructs a Ticket from the provided parameters. The ticketId is set to the
+	 * value stored in {@code counter}. The counter is then incremented. The rest of
+	 * the fields are initialized to the given parameter values, null, false or an
+	 * empty object type as appropriate. The {@code owner} field should be
+	 * initialized to an empty String. A new Ticket begins in the "New" state.
 	 * </p>
 	 * 
 	 * @param ticketType A TicketType enumeration representing either Incident or
@@ -165,34 +162,179 @@ public class Ticket {
 	 * @param category   A Category enumeration: Inquiry, Software, Hardware,
 	 *                   Network, Database.
 	 * @param priority   A Priority enumeration: Urgent, High, Medium, Low.
-	 * @param notes      An {@code ArrayList<String>} All of the notes of this
-	 *                   Ticket.
+	 * @param note       A {@code String>} to add to the notes field of this Ticket.
 	 * @throws IllegalArgumentException if any of the given values are null or if
 	 *                                  any of the String type parameters are empty
 	 *                                  strings.
 	 */
 	public Ticket(TicketType ticketType, String subject, String caller, Category category, Priority priority,
-			ArrayList<String> notes) {
-		String err = "Ticket cannot be created.";
-		// remaining null checks are in the individual setters.
-		if (ticketType == null || category == null || priority == null || notes == null) {
-			throw new IllegalArgumentException(err);
-		}
-		if (notes.equals("")) {
-			throw new IllegalArgumentException(err);
-		}
-
+			String note) {
 		// clear all the data fields of ticket
-		this.feedbackCode = null;
-		this.resolutionCode = null;
-		this.cancellationCode = null;
+//		this.feedbackCode = null;
+//		this.resolutionCode = null;
+//		this.cancellationCode = null;
 
-		this.ticketType = ticketType;
-		this.subject = subject;
-		this.caller = caller;
-		this.category = category;
-		this.priority = priority;
-		this.notes = notes;
+		this.ticketId = counter;
+		counter++;
+		setTicketType(ticketType);
+		setSubject(subject);
+		setCaller(caller);
+		setCategory(category);
+		setPriority(priority);
+		setOwner("");
+		this.notes.add(note);
 	}
 
+	/**
+	 * getTicketId - returns the TicketID number of this Ticket.
+	 * 
+	 * @return an Integer that is the TicketId number of this Ticket.
+	 */
+	public int getTicketId() {
+		return ticketId;
+	}
+
+	/**
+	 * getTicketType - returns the ticketType of this Ticket object.
+	 * 
+	 * @return the TicketType of this Ticket.
+	 */
+	public TicketType getTicketType() {
+		return ticketType;
+	}
+
+	/**
+	 * setTicketType(TicketType) - used by the constructor to set the TicketType
+	 * field of this Ticket. Throws IllegalArgumentException if given param is null.
+	 * 
+	 * @param ticketType the TicketType to apply to this Ticket
+	 * @throws IllegalArgumentException if given param is null.
+	 */
+	private void setTicketType(TicketType ticketType) {
+		if (ticketType == null)
+			throw new IllegalArgumentException(NULL_ERROR);
+		this.ticketType = ticketType;
+	}
+
+	/**
+	 * getSubject - returns the value of the subject field of this ticket.
+	 * 
+	 * @return a String that is the value of this ticket's subject field
+	 */
+	public String getSubject() {
+		return subject;
+	}
+
+	/**
+	 * setSubject(String) - sets the subject field of this ticket to the given
+	 * String.
+	 * 
+	 * @param subject the String to assign to this Ticket's subject field
+	 * @throws IllegalArgumentException if subject is null or empty String.
+	 */
+	private void setSubject(String subject) {
+		if (subject == null || subject.equals(""))
+			throw new IllegalArgumentException(NULL_ERROR);
+		this.subject = subject;
+	}
+
+	/**
+	 * getCaller - returns the String in the caller field of this Ticket
+	 * 
+	 * @return A String representing the caller field of this ticket
+	 */
+	public String getCaller() {
+		return caller;
+	}
+
+	/**
+	 * setCaller(String) - sets the caller field of this ticket to the given String.
+	 * 
+	 * @param caller A String representing the caller for this Ticket
+	 * @throws IllegalArgumentException if given param is null or empty String.
+	 */
+	private void setCaller(String caller) {
+		if (caller == null)
+			throw new IllegalArgumentException(NULL_ERROR);
+		if (caller.equals(""))
+			throw new IllegalArgumentException("Caller cannot be null or empty String.");
+		this.caller = caller;
+	}
+
+	/**
+	 * getCategory - returns the Category field value of this Ticket.
+	 * 
+	 * @return the Category field value of this ticket
+	 */
+	public Category getCategory() {
+		return category;
+	}
+
+	/**
+	 * setCategory(Category) - sets the category field of this ticket to the given
+	 * Category.
+	 * 
+	 * @param category the Category to set this Ticket's category field to.
+	 * @throws IllegalArgumentException when given Category is null.
+	 */
+	private void setCategory(Category category) {
+		if (category == null)
+			throw new IllegalArgumentException(NULL_ERROR);
+		this.category = category;
+	}
+
+	/**
+	 * getPriority - returns the value of the priority field of this Ticket
+	 * 
+	 * @return the Priority assigned to this ticket.
+	 */
+	public Priority getPriority() {
+		return priority;
+	}
+
+	/**
+	 * setPriority(Priority) - sets the priority of this ticket object to the given
+	 * Priority.
+	 * 
+	 * @param priority the Priority to set this ticket's priority to.
+	 * @throws IllegalArgumentException if the given priority is null.
+	 */
+	private void setPriority(Priority priority) {
+		if (priority == null)
+			throw new IllegalArgumentException(NULL_ERROR);
+		this.priority = priority;
+	}
+
+	/**
+	 * getOwner - returns the String that represents the owner field of this Ticket.
+	 * 
+	 * @return A String representing the owner field of this Ticket.
+	 */
+	public String getOwner() {
+		return owner;
+	}
+
+	/**
+	 * setOwner(String) - sets the owner field of this Ticket object to the given
+	 * String. This field can be an empty String (i.e. no owner), but cannot be
+	 * null.
+	 * 
+	 * @param owner A String representing the owner of this Ticket.
+	 * @throws IllegalArgumentException if given owner is null.
+	 */
+	private void setOwner(String owner) {
+		if (owner == null)
+			throw new IllegalArgumentException(NULL_ERROR);
+		this.owner = owner;
+	}
+
+	/**
+	 * getNotes - returns An ArrayList of Strings, containing the notes for this
+	 * Ticket.
+	 * 
+	 * @return ArrayList<String> of the notes for this Ticket.
+	 */
+	public ArrayList<String> getNotes() {
+		return notes;
+	}
 }
